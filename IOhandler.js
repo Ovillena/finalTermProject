@@ -24,26 +24,24 @@ const unzipper = require('unzipper'),
  * @return {promise}
  */
 const unzip = (pathIn, pathOut) => {
-  const fileExtension = pathIn.slice(pathIn.length - 4, pathIn.length);
-  console.log(fileExtension);
-  let zipFilePath = path.join(__dirname, pathIn);
-  let outFilePath = path.join(__dirname, pathOut);
-  return new Promise((reject, resolve) => {
+  return new Promise((resolve, reject) => {
+    const fileExtension = pathIn.slice(pathIn.length - 4, pathIn.length);
+    let zipFilePath = path.join(__dirname, pathIn);
+    let outFilePath = path.join(__dirname, pathOut);
     if (fileExtension != ".zip" || !pathIn.includes(".zip")) {
-      reject(console.log("file does not exist"));
+      reject("This is the wrong file type or the file does not exist");
     } else {
-      resolve(fs.createReadStream(zipFilePath)
-        .pipe(unzipper.Extract({ path: outFilePath }) //unzipping works but comes up with some kind of error
-        )) //perhaps coded promise incorrectly
+      fs.createReadStream(zipFilePath)
+        .pipe(unzipper.Extract({ path: outFilePath })
+        )
+      resolve("Unzipping was successful");
     }
-
   })
-
 };
 
 unzip("myfile.zip", "unzipped")
-  .then()
-  .catch();
+  .then(message => console.log(message))
+  .catch(err => console.log(err));
 
 /**
  * Description: read all the png files from given directory and return Promise containing array of each png file path 
