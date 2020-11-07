@@ -9,6 +9,7 @@
  */
 
 const { rejects } = require('assert');
+const { resolve } = require('path');
 
 const unzipper = require('unzipper'),
   fs = require("fs"),
@@ -26,8 +27,8 @@ const unzipper = require('unzipper'),
 const unzip = (pathIn, pathOut) => {
   return new Promise((resolve, reject) => {
     const fileExtension = pathIn.slice(pathIn.length - 4, pathIn.length);
-    let zipFilePath = path.join(__dirname, pathIn);
-    let outFilePath = path.join(__dirname, pathOut);
+    const zipFilePath = path.join(__dirname, pathIn);
+    const outFilePath = path.join(__dirname, pathOut);
     if (fileExtension != ".zip" || !pathIn.includes(".zip")) {
       reject("This is the wrong file type or the file does not exist");
     } else {
@@ -39,9 +40,9 @@ const unzip = (pathIn, pathOut) => {
   })
 };
 
-unzip("myfile.zip", "unzipped")
-  .then(message => console.log(message))
-  .catch(err => console.log(err));
+// unzip("myfile.zip", "unzipped")
+//   .then(message => console.log(message))
+//   .catch(err => console.log(err));
 
 /**
  * Description: read all the png files from given directory and return Promise containing array of each png file path 
@@ -50,8 +51,27 @@ unzip("myfile.zip", "unzipped")
  * @return {promise}
  */
 const readDir = dir => {
-
+  return new Promise((resolve, reject) => {
+    fs.readdir(dir, (err, files) => {
+      if (err) {
+        reject(err);
+      } else {
+        let dirArray = [];
+        files.forEach(element => {
+          if (element.includes(".png")) {
+            dirArray.push(path.join(__dirname, element));
+          }
+        }); //finish loop to create new array of png files, get file paths ***********************
+        resolve(dirArray);
+      }
+    })
+  })
 };
+
+readDir(path.join(__dirname, "unzipped"))
+  .then(result => console.log(result))
+  .catch(err => console.log(err));
+
 
 /**
  * Description: Read in png file by given pathIn, 
