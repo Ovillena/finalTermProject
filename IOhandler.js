@@ -80,7 +80,7 @@ const readDir = dir => {
  */
 const grayScale = (pathIn, pathOut) => {
 
-  const newPath = path.join(__dirname, "greyscaled"); // creates greyscaled folder if it doesnt exist already
+  const newPath = path.join(__dirname, "grayscaled"); // creates greyscaled folder if it doesnt exist already
   if (!fs.existsSync(newPath)) {
     fs.mkdirSync(newPath);
   }
